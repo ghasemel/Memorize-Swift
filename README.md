@@ -1,6 +1,6 @@
 #  Memorize Game App (Exersice)
 
-This iOS app has implemented during a training course from Standford university [Developing Apps for iOS](https://cs193p.sites.stanford.edu)
+This iOS app has been implemented during the training course from Standford university [Developing Apps for iOS](https://cs193p.sites.stanford.edu)
 
 ## Tools
 * Xcode 12.4
