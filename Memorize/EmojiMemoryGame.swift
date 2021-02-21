@@ -8,8 +8,8 @@
 import SwiftUI
 
 
-class EmojiMemoryGame {
-    private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame(pairCount: Int.random(in: 2...5))
+class EmojiMemoryGame: ObservableObject {
+    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame(pairCount: Int.random(in: 2...5))
     
     static func createMemoryGame(pairCount: Int) -> MemoryGame<String> {
         let emojis: Array<String> = ["👻", "🎃", "🕷", "💀", "😱", "😈", "👺", "👽", "🤖", "👹", "🤡", "👾"]
@@ -34,6 +34,10 @@ class EmojiMemoryGame {
     // MARK: - Intent(s)
     
     func choose(card: MemoryGame<String>.Card) {
+        // first way to update UI but
+        // it is error porne and need to mentioned explicitly
+        // objectWillChange.send()
+        
         model.choose(card: card)
     }
 }
