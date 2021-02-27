@@ -11,7 +11,7 @@ import SwiftUI
 class EmojiMemoryGame: ObservableObject {
     @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame(pairCount: Int.random(in: 2...5))
     
-    static func createMemoryGame(pairCount: Int) -> MemoryGame<String> {
+    private static func createMemoryGame(pairCount: Int) -> MemoryGame<String> {
         let emojis: Array<String> = ["👻", "🎃", "🕷", "💀", "😱", "😈", "👺", "👽", "🤖", "👹", "🤡", "👾"]
         print("cardCount: \(pairCount)")
         
@@ -34,10 +34,10 @@ class EmojiMemoryGame: ObservableObject {
     // MARK: - Intent(s)
     
     func choose(card: MemoryGame<String>.Card) {
-        // first way to update UI but
-        // it is error porne and need to mentioned explicitly
-        // objectWillChange.send()
-        
         model.choose(card: card)
+    }
+    
+    func resetGame() {
+        model = EmojiMemoryGame.createMemoryGame(pairCount: Int.random(in: 2...5))
     }
 }
