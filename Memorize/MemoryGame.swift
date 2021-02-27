@@ -9,7 +9,7 @@ import Foundation
 
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
-   private(set) var cards: Array<Card>
+    private(set) var cards: Array<Card>
     
     private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get { cards.indices.filter { cards[$0].isFaceUp }.only }
@@ -49,9 +49,47 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Identifiable {
-        var isFaceUp: Bool = false
-        var isMatched: Bool = false
+        var isFaceUp: Bool = false {
+            didSet {
+                if isFaceUp {
+                    if lastFaceUpdate == nil {
+                        lastFaceUpdate = Date()
+                    }
+                } else {
+                    pastFaceUpTime = faceUpTime
+                    lastFaceUpdate = nil
+                }
+            }
+        }
+        var isMatched: Bool = false {
+            didSet {
+                pastFaceUpTime = faceUpTime
+                lastFaceUpdate = nil
+            }
+        }
         var content: CardContent
         var id: Int
+        
+        var bounsTimeLimit: TimeInterval = 6
+        var bounsTimeRemaining: TimeInterval {
+            max(0, bounsTimeLimit - faceUpTime)
+        }
+        var bounsRemaining: Double {
+            (bounsTimeLimit > 0 && bounsTimeRemaining > 0) ? bounsTimeRemaining/bounsTimeLimit : 0
+        }
+        
+        var isConsumingBounsTime: Bool {
+            isFaceUp && !isMatched && bounsTimeRemaining > 0
+        }
+        
+        var lastFaceUpdate: Date?
+        var pastFaceUpTime: TimeInterval = 0
+        var faceUpTime: TimeInterval {
+            if let lastFaceUpdate = self.lastFaceUpdate {
+                return pastFaceUpTime + Date().timeIntervalSince(lastFaceUpdate)
+            } else {
+                return pastFaceUpTime
+            }
+        }
     }
 }

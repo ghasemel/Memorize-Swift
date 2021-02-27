@@ -45,12 +45,30 @@ struct CardView: View {
         }
     }
     
+    @State private var animationBounsRemaining: Double = 0
+    private func startBounsTimeRemaining() {
+        animationBounsRemaining = card.bounsRemaining
+        withAnimation(.linear(duration: card.bounsTimeRemaining)) {
+            animationBounsRemaining = 0
+        }
+    }
+    
     @ViewBuilder
     private func body(for size: CGSize) -> some View {
         if card.isFaceUp || !card.isMatched {
             ZStack {
-                Pie(startAngle: Angle.degrees(0-90), endAngle: Angle.degrees(110-90), clockwise: true)
-                    .padding(5).opacity(0.4)
+                Group {
+                    if card.isConsumingBounsTime {
+                        Pie(startAngle: Angle.degrees(0-90), endAngle: Angle.degrees(-animationBounsRemaining*360-90), clockwise: true)
+                            .onAppear {
+                                self.startBounsTimeRemaining()
+                            }
+                    } else {
+                        Pie(startAngle: Angle.degrees(0-90), endAngle: Angle.degrees(-card.bounsRemaining*360-90), clockwise: true)
+                    }
+                }
+                .padding(5).opacity(0.4)
+                
                 Text(card.content)
                     .font(Font.system(size: fontSize(for: size)))
                     .rotationEffect(Angle.degrees(card.isMatched ? 360 : 0))
